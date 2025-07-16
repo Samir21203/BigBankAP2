@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -19,7 +18,6 @@ import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
 
-    // Componentes FXML injetados da sua tela
     @FXML private Button buttonLogin;
     @FXML private Label invalidLloginLabel;
     @FXML private PasswordField passwordFieldLogin;
@@ -27,7 +25,6 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Esconde a label de erro ao iniciar a tela
         invalidLloginLabel.setVisible(false);
     }    
 
@@ -36,19 +33,16 @@ public class LoginController implements Initializable {
         String username = userFieldLogin.getText();
         String password = passwordFieldLogin.getText();
 
-        // Verifica se os campos estão vazios
         if (username.isBlank() || password.isBlank()) {
             mostrarFeedbackErro("Por favor, preencha todos os campos.");
             return;
         }
 
-        // --- LÓGICA DE LOGIN FIXA (HARDCODED) ---
-        // Verifica se o usuário e a senha são "admin" / "admin"
+        // --- Para implementar depois ---
         if (username.equals("admin") && password.equals("admin")) {
             invalidLloginLabel.setVisible(false);
             abrirTelaPrincipal();
         } else {
-            // Se as credenciais estiverem erradas, mostra a mensagem de erro
             mostrarFeedbackErro("Usuário ou senha inválidos!");
         }
     }
@@ -66,13 +60,9 @@ public class LoginController implements Initializable {
             Stage currentStage = (Stage) buttonLogin.getScene().getWindow();
             currentStage.close();
 
-        } catch (Exception e) { // MUDANÇA AQUI: de IOException para Exception
-            // Este catch agora captura QUALQUER tipo de erro (incluindo NullPointerException)
-
-            // Imprime o erro completo no console para depuração
+        } catch (Exception e) {
             e.printStackTrace();
 
-            // Exibe um alerta útil para o usuário
             Alert alerta = new Alert(AlertType.ERROR);
             alerta.setTitle("Erro Crítico");
             alerta.setHeaderText("Falha ao carregar a tela principal.");

@@ -14,12 +14,10 @@ public class ClienteDAO {
     
     private List<Cliente> clientes;
     
-    // Construtor privado que carrega os clientes do arquivo no momento da criação
     private ClienteDAO() {
         this.clientes = carregarClientes();
     }
     
-    // Método público para obter a instância única da classe.
     public static ClienteDAO getInstance() {
         return instancia;
     }
@@ -34,7 +32,6 @@ public class ClienteDAO {
         return maxId + 1;
     }
     
-    // Salva a lista atual de clientes no arquivo binário.
     private void salvarNoArquivo() {
         try {
             ArquivoUtil.gravar(this.clientes, Constantes.ARQUIVO_CLIENTES);
@@ -46,14 +43,13 @@ public class ClienteDAO {
     private List<Cliente> carregarClientes(){
         File arquivo = new File(Constantes.ARQUIVO_CLIENTES);
         if (!arquivo.exists()) {
-            return new ArrayList<>(); // Retorna lista vazia se o arquivo não existe
+            return new ArrayList<>();
         }
         
         try {
             return (List<Cliente>) ArquivoUtil.ler(Constantes.ARQUIVO_CLIENTES);
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Erro ao carregar clientes: " + e.getMessage());
-            // Se houver erro de leitura, começa com uma lista vazia para não travar a aplicação
             return new ArrayList<>();
         }
     }

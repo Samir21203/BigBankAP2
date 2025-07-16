@@ -6,7 +6,7 @@ package persistence;
 
 /**
  *
- * @author Victor
+ * Não implementado
  */
 public class TransacaoDAO {
     

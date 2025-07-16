@@ -6,13 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-//import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Victor
- */
+
 public class ArquivoUtil {
     public static void gravar(List<?> lista, String nomeArquivo) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {

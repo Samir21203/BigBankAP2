@@ -41,7 +41,6 @@ import util.TipoProduto;
 
 public class PrincipalController implements Initializable {
 
-    // --- Injeções dos Componentes FXML ---
     @FXML private AnchorPane paneClientes;
     @FXML private AnchorPane paneContas;
     @FXML private AnchorPane paneProdutos;
@@ -101,7 +100,6 @@ public class PrincipalController implements Initializable {
         tableProdutos.setItems(FXCollections.observableArrayList(ProdutoDAO.getInstance().getAll()));
     }
     
-    // --- AÇÕES PARA CLIENTES ---
     @FXML
     private void handleAdicionarCliente() {
         abrirFormularioCliente(null);
@@ -117,31 +115,27 @@ public class PrincipalController implements Initializable {
     }
     @FXML
     private void handleExcluirCliente() {
-        // 1. Pega o cliente selecionado na tabela de clientes
+
         Cliente clienteParaExcluir = tableClientes.getSelectionModel().getSelectedItem();
 
         if (clienteParaExcluir == null) {
             mostrarAlerta(AlertType.WARNING, "Seleção Vazia", "Selecione um cliente na tabela para excluir.");
             return;
         }
-
-        // 2. Mostra um alerta de confirmação detalhado
+        
         Optional<ButtonType> resultado = mostrarAlertaConfirmacao("Confirmar Exclusão em Cascata",
                 "Tem certeza que deseja excluir o cliente " + clienteParaExcluir.getNome() + "?\n\nATENÇÃO: Todas as contas e produtos associados a este cliente também serão excluídos permanentemente.");
 
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             long idCliente = clienteParaExcluir.getId();
 
-            // 3. Lógica de Cascata: Exclui as contas associadas
             List<Conta> todasAsContas = ContaDAO.getInstance().getAll();
-            // Usamos uma cópia da lista para evitar erros de modificação concorrente
             for (Conta conta : new ArrayList<>(todasAsContas)) {
                 if (conta.getCliente().getId() == idCliente) {
                     ContaDAO.getInstance().delete(conta);
                 }
             }
 
-            // 4. Lógica de Cascata: Exclui os produtos associados
             List<ProdutoBancario> todosOsProdutos = ProdutoDAO.getInstance().getAll();
             for (ProdutoBancario produto : new ArrayList<>(todosOsProdutos)) {
                 if (produto.getCliente().getId() == idCliente) {
@@ -149,16 +143,13 @@ public class PrincipalController implements Initializable {
                 }
             }
 
-            // 5. Finalmente, exclui o próprio cliente
             ClienteDAO.getInstance().delete(clienteParaExcluir);
 
-            // 6. Atualiza a interface
             mostrarAlerta(AlertType.INFORMATION, "Sucesso", "Cliente e todos os seus dados foram excluídos.");
-            handleMostrarClientes(); // Recarrega a tabela de clientes
+            handleMostrarClientes();
         }
     }
 
-    // --- AÇÕES PARA CONTAS ---
     @FXML
     private void handleCriarConta() {
         try {
@@ -167,19 +158,28 @@ public class PrincipalController implements Initializable {
 
             ChoiceDialog<TipoConta> dialogoTipo = new ChoiceDialog<>(TipoConta.CONTA_CORRENTE, TipoConta.values());
             dialogoTipo.setTitle("Tipo de Conta");
-            dialogoTipo.setHeaderText("Selecione o tipo da nova conta.");
+            dialogoTipo.setHeaderText("Selecione o tipo da nova conta para " + cliente.getNome());
+            dialogoTipo.setContentText("Tipo:");
             Optional<TipoConta> tipoResultado = dialogoTipo.showAndWait();
 
             if (tipoResultado.isPresent()) {
-                Conta novaConta = (tipoResultado.get() == TipoConta.CONTA_CORRENTE)
-                        ? new ContaCorrente(cliente, 1000.0, 15.0)
-                        : new ContaPoupanca(cliente, 0.005, 10);
-
+                TipoConta tipo = tipoResultado.get();
+                Conta novaConta;
+                
+                if (tipo == TipoConta.CONTA_CORRENTE) {
+                    novaConta = new ContaCorrente(cliente, 1000.0, 15.0);
+                } else {
+                    novaConta = new ContaPoupanca(cliente, 0.005, 10);
+                } 
+                
                 ContaDAO.getInstance().add(novaConta);
+                
                 handleMostrarContas();
                 mostrarAlerta(AlertType.INFORMATION, "Sucesso", "Conta criada para " + cliente.getNome());
             }
-        } catch (Exception e) { /* Usuário cancelou */ }
+        } catch (Exception e) {
+            mostrarAlerta(AlertType.WARNING, "Operação Cancelada", e.getMessage());
+        }
     }
     @FXML
     private void handleExcluirConta() {
@@ -195,7 +195,6 @@ public class PrincipalController implements Initializable {
         }
     }
 
-    // --- AÇÕES PARA PRODUTOS ---
     @FXML
     private void handleContratarProduto() {
         try {
@@ -204,9 +203,11 @@ public class PrincipalController implements Initializable {
             
             ObservableList<TipoProduto> tipos = FXCollections.observableArrayList(TipoProduto.values());
             tipos.remove(TipoProduto.TRANSACAO);
+            
             ChoiceDialog<TipoProduto> dialogoTipo = new ChoiceDialog<>(tipos.get(0), tipos);
             dialogoTipo.setTitle("Tipo de Produto");
             dialogoTipo.setHeaderText("Selecione o produto para " + cliente.getNome());
+            dialogoTipo.setContentText("Produto:");
             Optional<TipoProduto> tipoResultado = dialogoTipo.showAndWait();
 
             if (tipoResultado.isPresent()) {
@@ -217,7 +218,10 @@ public class PrincipalController implements Initializable {
                     mostrarAlerta(AlertType.INFORMATION, "Sucesso", tipoResultado.get().getNomeProduto() + " contratado.");
                 }
             }
-        } catch (Exception e) { /* Cancelado ou erro de entrada */ }
+        } catch (NumberFormatException e){
+            mostrarAlerta(AlertType.ERROR, "Erro de Entrada", "Valor numérico inválido inserido.");
+        } catch (Exception e) {
+        }
     }
     @FXML
     private void handleEditarProduto() {
@@ -258,7 +262,10 @@ public class PrincipalController implements Initializable {
             } else {
                  mostrarAlerta(AlertType.INFORMATION, "Aviso", "Edição não implementada para este tipo de produto.");
             }
-        } catch (Exception e) { /* Usuário cancelou ou inseriu valor inválido */ }
+        } catch (NumberFormatException e) {
+            mostrarAlerta(AlertType.ERROR, "Erro de Entrada", "Valor numérico inválido inserido.");
+        } catch (Exception e) {
+        }
     }
     @FXML
     private void handleExcluirProduto() {
@@ -311,7 +318,9 @@ public class PrincipalController implements Initializable {
             case INVESTIMENTO:
                 double valorInicial = Double.parseDouble(mostrarDialogoEntrada("Valor do Investimento", "Digite o valor inicial:", "1000.00"));
                 return new Investimento(cliente, valorInicial, 0.01);
-            default: return null;
+            default: 
+                mostrarAlerta(AlertType.ERROR, "Erro", "Criação não implementada para este tipo de produto.");
+                return null;
         }
     }
     
@@ -336,7 +345,7 @@ public class PrincipalController implements Initializable {
         if (result.isPresent() && !result.get().isBlank()) {
             return result.get();
         }
-        throw new Exception("Operação cancelada.");
+        throw new Exception("Operação cancelada ou entrada vazia.");
     }
     
     private void mostrarAlerta(AlertType tipo, String titulo, String mensagem) {

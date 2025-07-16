@@ -87,13 +87,12 @@ public class ClienteController implements Initializable {
             return;
         }
         
-        // --- LÓGICA DE SALVAR AJUSTADA ---
         boolean isNovoCliente = (clienteSelecionado == null);
         
         if (isNovoCliente) {
-            // Se for um novo cliente, cria usando o construtor que exige nome e cpf
+           
             Cliente novoCliente = new Cliente(textFieldNome.getText(), textFieldCpf.getText());
-            // Define os outros atributos
+
             novoCliente.setDataNascimento(datePickerNascimento.getValue());
             novoCliente.setEndereco(textFieldEndereco.getText());
             novoCliente.setTelefone(textFieldTelefone.getText());
@@ -103,9 +102,9 @@ public class ClienteController implements Initializable {
             ClienteDAO.getInstance().add(novoCliente);
             mostrarAlerta(AlertType.INFORMATION, "Sucesso", "Novo cliente cadastrado com sucesso!");
         } else { 
-            // Se for uma atualização, apenas atualiza os campos do objeto já existente
+            
             clienteSelecionado.setNome(textFieldNome.getText());
-            // O CPF não pode ser alterado, então não há setCpf()
+            
             clienteSelecionado.setDataNascimento(datePickerNascimento.getValue());
             clienteSelecionado.setEndereco(textFieldEndereco.getText());
             clienteSelecionado.setTelefone(textFieldTelefone.getText());
@@ -137,7 +136,6 @@ public class ClienteController implements Initializable {
             textFieldEmail.setText(cliente.getEmail());
             passwordFieldSenha.setText(cliente.getSenha());
             
-            // Impede a edição do CPF de um cliente existente
             textFieldCpf.setEditable(false);
         } else {
             limparFormulario();
@@ -155,7 +153,6 @@ public class ClienteController implements Initializable {
         passwordFieldSenha.clear();
         tableViewClientes.getSelectionModel().clearSelection();
         
-        // Permite a edição do CPF ao criar um novo cliente
         textFieldCpf.setEditable(true);
     }
     
@@ -175,8 +172,6 @@ public class ClienteController implements Initializable {
             return false;
         }
 
-        // --- VALIDAÇÃO DE CPF DUPLICADO ---
-        // Só verifica se estamos criando um novo cliente (clienteSelecionado é nulo)
         if (clienteSelecionado == null && ClienteDAO.getInstance().getByCpf(cpf) != null) {
             mostrarAlerta(AlertType.ERROR, "Erro de Validação", "Já existe um cliente cadastrado com este CPF.");
             return false;
@@ -205,15 +200,8 @@ public class ClienteController implements Initializable {
         return alerta.showAndWait();
     }
 
-    /**
-     * Recebe os dados de um cliente da tela anterior (PrincipalController).
-     * Permite que a tela de detalhes abra em "modo de edição".
-     * @param cliente O cliente que foi selecionado na tabela da tela principal.
-     */
     public void initData(Cliente cliente) {
-        // Se um cliente foi passado (não é nulo), significa que estamos editando.
         if (cliente != null) {
-            // Usa o seu método já existente para preencher o formulário com os dados.
             preencherFormulario(cliente);
         }
     }

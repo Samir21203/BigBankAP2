@@ -28,7 +28,7 @@ import util.TipoConta;
 
 public class ContaController implements Initializable {
 
-    // Componentes FXML (adapte os fx:id no seu conta.fxml para estes nomes)
+    // Componentes FXML
     @FXML private TableView<Conta> tableViewContas;
     @FXML private TableColumn<Conta, Long> columnNumero;
     @FXML private TableColumn<Conta, Cliente> columnCliente;
@@ -37,13 +37,11 @@ public class ContaController implements Initializable {
     // Seção para criar nova conta
     @FXML private ComboBox<Cliente> comboBoxCliente;
     @FXML private ComboBox<TipoConta> comboBoxTipoConta;
-    @FXML private Button buttonNewConta;
 
     // Seção de detalhes e ações
     @FXML private Label labelNumeroConta;
     @FXML private Label labelSaldo;
     @FXML private Label labelClienteNome;
-    @FXML private Button buttonDeleteConta;
 
     private Conta contaSelecionada;
 
@@ -62,47 +60,6 @@ public class ContaController implements Initializable {
         carregarComboBoxes();
         carregarTabelaContas();
         limparDetalhes();
-    }
-
-    @FXML
-    private void handleNewConta() {
-        Cliente cliente = comboBoxCliente.getSelectionModel().getSelectedItem();
-        TipoConta tipo = comboBoxTipoConta.getSelectionModel().getSelectedItem();
-
-        if (cliente == null || tipo == null) {
-            mostrarAlerta(AlertType.ERROR, "Erro ao Criar Conta", "Por favor, selecione um cliente e um tipo de conta.");
-            return;
-        }
-
-        Conta novaConta;
-        if (tipo == TipoConta.CONTA_CORRENTE) {
-            novaConta = new ContaCorrente(cliente, 1000.0, 15.0); // Limite e taxa padrão
-        } else {
-            novaConta = new ContaPoupanca(cliente, 0.005, 10); // Rendimento e dia padrão
-        }
-        
-        ContaDAO.getInstance().add(novaConta);
-        
-        carregarTabelaContas(); // Atualiza a tabela na tela
-        mostrarAlerta(AlertType.INFORMATION, "Sucesso", "Nova " + tipo.getDescricao() + " criada para " + cliente.getNome());
-    }
-    
-    @FXML
-    private void handleDeleteConta() {
-        if (contaSelecionada == null) {
-            mostrarAlerta(AlertType.WARNING, "Nenhuma Conta Selecionada", "Por favor, selecione uma conta na tabela para excluir.");
-            return;
-        }
-
-        Optional<ButtonType> resultado = mostrarAlertaConfirmacao("Confirmar Exclusão",
-                "Tem certeza que deseja excluir a conta " + contaSelecionada.getNumeroConta() + "?");
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            ContaDAO.getInstance().delete(contaSelecionada);
-            carregarTabelaContas();
-            limparDetalhes();
-            mostrarAlerta(AlertType.INFORMATION, "Sucesso", "Conta excluída com sucesso!");
-        }
     }
 
     private void carregarTabelaContas() {
@@ -134,21 +91,5 @@ public class ContaController implements Initializable {
         labelSaldo.setText("-");
         labelClienteNome.setText("-");
         tableViewContas.getSelectionModel().clearSelection();
-    }
-    
-    private void mostrarAlerta(AlertType tipo, String titulo, String mensagem) {
-        Alert alerta = new Alert(tipo);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensagem);
-        alerta.showAndWait();
-    }
-
-    private Optional<ButtonType> mostrarAlertaConfirmacao(String titulo, String mensagem) {
-        Alert alerta = new Alert(AlertType.CONFIRMATION);
-        alerta.setTitle(titulo);
-        alerta.setHeaderText(null);
-        alerta.setContentText(mensagem);
-        return alerta.showAndWait();
     }
 }

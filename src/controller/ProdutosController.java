@@ -35,9 +35,6 @@ public class ProdutosController implements Initializable {
     @FXML private TableColumn<ProdutoBancario, Cliente> columnCliente;
     @FXML private ComboBox<Cliente> comboBoxCliente;
     @FXML private ComboBox<TipoProduto> comboBoxTipoProduto;
-    @FXML private Button buttonContratarProduto;
-    @FXML private Button buttonDeleteProduto;
-    @FXML private Button buttonEditarProduto;
     @FXML private Button buttonVoltar;
 
     @Override
@@ -68,11 +65,6 @@ public class ProdutosController implements Initializable {
         tableViewProdutos.setItems(obsProdutos);
     }
 
-    @FXML
-    private void handleVoltar() {
-        Stage stage = (Stage) buttonVoltar.getScene().getWindow();
-        stage.close();
-    }
 
     @FXML
     private void handleContratarProduto() {
@@ -110,9 +102,7 @@ public class ProdutosController implements Initializable {
             }
         } catch (NumberFormatException e) {
             mostrarAlerta(AlertType.ERROR, "Erro de Entrada", "Valor inválido inserido.");
-            return;
         } catch (Exception e) {
-            return; // Usuário cancelou
         }
 
         if (novoProduto != null) {
@@ -150,7 +140,6 @@ public class ProdutosController implements Initializable {
             } else if (produto instanceof Investimento) {
                 Investimento investimento = (Investimento) produto;
                 double novoRendimento = Double.parseDouble(mostrarDialogoEntrada("Editar Rendimento", "Rendimento mensal atual: " + investimento.getRendimentoMensal() * 100 + "%\n\nDigite a nova taxa (ex: 0.01 para 1%):"));
-                // ESTA É A LINHA CORRIGIDA
                 investimento.setRendimentoMensal(novoRendimento);
                 alterado = true;
             } else {
@@ -165,7 +154,6 @@ public class ProdutosController implements Initializable {
         } catch (NumberFormatException e) {
             mostrarAlerta(AlertType.ERROR, "Erro de Entrada", "Valor inválido inserido.");
         } catch (Exception e) {
-            // Se o usuário cancelar o diálogo, não faz nada.
         }
     }
     

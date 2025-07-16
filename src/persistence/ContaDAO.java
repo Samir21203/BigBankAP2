@@ -14,12 +14,10 @@ public class ContaDAO {
     private static final ContaDAO instancia = new ContaDAO();
     private List<Conta> contas;
     
-    // Construtor privado que carrega os clientes do arquivo no momento da criação
     private ContaDAO() {
         this.contas = carregarContas();
     }
     
-    // Método público para obter a instância única da classe.
     public static ContaDAO getInstance() {
         return instancia;
     }
@@ -58,7 +56,6 @@ public class ContaDAO {
             return (List<Conta>) ArquivoUtil.ler(Constantes.ARQUIVO_CONTAS);
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Erro ao carregar contas: " + e.getMessage());
-            // Se houver erro de leitura, começa com uma lista vazia para não travar a aplicação
             return new ArrayList<>();
         }
     }

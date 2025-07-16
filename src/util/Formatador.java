@@ -11,7 +11,7 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 
 /**
- *
+ * Utilização adequada no futuro
  * @author Victor
  */
 public class Formatador {

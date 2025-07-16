@@ -1,7 +1,6 @@
 
 package model.produtos;
 
-//import model.produtos.ProdutoBancario;
 import model.Cliente;
 import util.TipoProduto;
 
