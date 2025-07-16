@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalController">
+   <top>
+      <HBox prefHeight="50.0" prefWidth="750.0" style="-fx-background-color: #10454F;">
+         <children>
+            <Button onAction="#handleMostrarClientes" prefHeight="50.0" prefWidth="150.0" text="Gerenciar Clientes" />
+            <Button onAction="#handleMostrarContas" prefHeight="50.0" prefWidth="150.0" text="Gerenciar Contas" />
+            <Button onAction="#handleMostrarProdutos" prefHeight="50.0" prefWidth="150.0" text="Gerenciar Produtos" />
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <AnchorPane BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane fx:id="paneClientes" prefHeight="450.0" prefWidth="750.0">
+               <children>
+                  <TableView fx:id="tableClientes" prefHeight="400.0" prefWidth="750.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <columns>
+                        <TableColumn fx:id="colClienteId" prefWidth="75.0" text="ID" />
+                        <TableColumn fx:id="colClienteCpf" prefWidth="250.0" text="CPF" />
+                        <TableColumn fx:id="colClienteNome" prefWidth="425.0" text="Nome" />
+                     </columns>
+                  </TableView>
+                  <HBox alignment="CENTER_RIGHT" layoutY="405.0" prefHeight="45.0" prefWidth="750.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button onAction="#handleAdicionarCliente" prefWidth="120.0" text="Adicionar Cliente" />
+                        <Button onAction="#handleEditarCliente" prefWidth="120.0" text="Editar Cliente" />
+                        <Button onAction="#handleExcluirCliente" prefWidth="120.0" text="Excluir Cliente" />
+                     </children>
+                     <padding><Insets right="10.0" /></padding>
+                  </HBox>
+               </children>
+            </AnchorPane>
+            
+            <AnchorPane fx:id="paneContas" prefHeight="450.0" prefWidth="750.0" visible="false">
+               <children>
+                  <TableView fx:id="tableContas" prefHeight="400.0" prefWidth="750.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <columns>
+                        <TableColumn fx:id="colContaNumero" prefWidth="100.0" text="Nº Conta" />
+                        <TableColumn fx:id="colContaTipo" prefWidth="250.0" text="Tipo" />
+                        <TableColumn fx:id="colContaCliente" prefWidth="400.0" text="Cliente Titular" />
+                     </columns>
+                  </TableView>
+                  <HBox alignment="CENTER_RIGHT" layoutY="405.0" prefHeight="45.0" prefWidth="750.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button onAction="#handleCriarConta" prefWidth="120.0" text="Criar Conta" />
+                        <Button onAction="#handleExcluirConta" prefWidth="120.0" text="Excluir Conta" />
+                     </children>
+                     <padding><Insets right="10.0" /></padding>
+                  </HBox>
+               </children>
+            </AnchorPane>
+            
+            <AnchorPane fx:id="paneProdutos" prefHeight="450.0" prefWidth="750.0" visible="false">
+               <children>
+                  <TableView fx:id="tableProdutos" prefHeight="400.0" prefWidth="750.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <columns>
+                        <TableColumn fx:id="colProdutoId" prefWidth="75.0" text="Código" />
+                        <TableColumn fx:id="colProdutoTipo" prefWidth="150.0" text="Tipo" />
+                        <TableColumn fx:id="colProdutoDescricao" prefWidth="325.0" text="Descrição" />
+                        <TableColumn fx:id="colProdutoCliente" prefWidth="200.0" text="Cliente" />
+                     </columns>
+                  </TableView>
+                  <HBox alignment="CENTER_RIGHT" layoutY="405.0" prefHeight="45.0" prefWidth="750.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button onAction="#handleContratarProduto" prefWidth="140.0" text="Contratar Produto" />
+                        <Button onAction="#handleEditarProduto" prefWidth="120.0" text="Editar Produto" />
+                        <Button onAction="#handleExcluirProduto" prefWidth="120.0" text="Excluir Produto" />
+                     </children>
+                     <padding><Insets right="10.0" /></padding>
+                  </HBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
