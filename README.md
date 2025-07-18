@@ -65,7 +65,7 @@ Para executar este projeto, você precisará ter o ambiente de desenvolvimento J
 
 1.  **Clone o repositório:**
     ```bash
-    git clone <url-do-seu-repositorio>
+    git clone <https://github.com/Samir21203/BigBankAP2.git>
     ```
 
 2.  **Abra o projeto no NetBeans:**
